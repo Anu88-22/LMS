@@ -1,8 +1,11 @@
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 async function getSubjects() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
   try {
-    const res = await fetch('http://localhost:5000/api/subjects', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/subjects`, { cache: 'no-store' });
     if (!res.ok) {
       return [];
     }
