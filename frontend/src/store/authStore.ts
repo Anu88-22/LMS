@@ -10,7 +10,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
-    isAuthenticated: !!Cookies.get('accessToken'),
+    isAuthenticated: typeof window !== 'undefined' ? !!Cookies.get('accessToken') : false,
     login: (token, userData) => {
         Cookies.set('accessToken', token);
         set({ user: userData, isAuthenticated: true });
