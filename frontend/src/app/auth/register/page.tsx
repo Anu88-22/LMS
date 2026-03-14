@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '../../../lib/apiClient';
 import { useAuthStore } from '../../../store/authStore';
 import { Button } from '../../../components/common/Button';
 
-export default function RegisterPage() {
+function RegisterForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get('redirect') || '/';
@@ -104,3 +104,16 @@ export default function RegisterPage() {
         </div>
     );
 }
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            </div>
+        }>
+            <RegisterForm />
+        </Suspense>
+    );
+}
+
