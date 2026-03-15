@@ -21,5 +21,5 @@ export const config = {
     cookie: {
         domain: process.env.COOKIE_DOMAIN || 'localhost',
     },
-    port: parseInt(process.env.PORT || '5000', 10),
+    port: parseInt(process.env.PORT || '8080', 10),
 };
