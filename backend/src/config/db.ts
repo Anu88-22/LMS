@@ -10,6 +10,9 @@ const poolOptions: any = config.db.url
         password: config.db.pass,
         database: config.db.name,
         multipleStatements: true,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
     };
 
 export const pool = mysql.createPool(poolOptions);
