@@ -39,8 +39,17 @@ app.get('/api/setup-db', async (req: express.Request, res: express.Response) => 
             if (fs.existsSync(filePath)) {
                 console.log(`Executing ${file}...`);
                 const sql = fs.readFileSync(filePath, 'utf8');
-                await pool.query(sql);
-                log += `Successfully executed ${file}\n`;
+                try {
+                    await pool.query(sql);
+                    log += `Successfully executed ${file}\n`;
+                } catch (sqlErr: any) {
+                    // Ignore "already exists" errors so we can finish the other files
+                    if (sqlErr.code === 'ER_DUP_ENTRY' || sqlErr.code === 'ER_DUP_FIELDNAME') {
+                        log += `Partially skipped ${file} (data already exists)\n`;
+                    } else {
+                        throw sqlErr; // Real errors still stop the process
+                    }
+                }
             } else {
                 log += `Skipped ${file} (not found)\n`;
             }
