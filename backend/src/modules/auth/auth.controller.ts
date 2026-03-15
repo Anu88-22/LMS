@@ -31,7 +31,7 @@ export const register = async (req: Request, res: Response) => {
 
         res.status(201).json({ accessToken, user: { id: userId, email, name } });
     } catch (err) {
-        console.error(err);
+        console.error("REGISTRATION ERROR DETAILS:", err);
         res.status(500).json({ error: 'Server error during registration' });
     }
 };
