@@ -1,12 +1,12 @@
 -- Add custom course data
 
-INSERT INTO subjects (id, title, slug, description, is_published, price) VALUES 
+INSERT IGNORE INTO subjects (id, title, slug, description, is_published, price) VALUES 
 (4, 'The Ultimate User Masterclass', 'ultimate-user-masterclass', 'This is the premium custom course created using the YouTube videos you specifically requested.', 1, 99.99);
 
-INSERT INTO sections (id, subject_id, title, order_index) VALUES 
+INSERT IGNORE INTO sections (id, subject_id, title, order_index) VALUES 
 (3, 4, 'Core Lessons', 1);
 
-INSERT INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES 
+INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES 
 (3, 'Lesson 1', 'https://www.youtube.com/watch?v=sNjyOSADDxE', 1, 0),
 (3, 'Lesson 2', 'https://www.youtube.com/watch?v=npJB3PKiKQ4', 2, 0),
 (3, 'Lesson 3', 'https://www.youtube.com/watch?v=7g-jXZ735G8', 3, 0),
