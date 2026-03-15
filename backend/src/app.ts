@@ -31,7 +31,7 @@ app.get('/api/setup-db', async (req: express.Request, res: express.Response) => 
         console.log("Starting DB Setup...");
         const dbDir = path.join(process.cwd(), 'db');
         
-        const files = ['schema.sql', 'seed.sql', 'add_python_courses.sql'];
+        const files = ['schema.sql', 'seed.sql', 'add_python_courses.sql', 'add_custom_course.sql'];
         let log = "";
 
         for (const file of files) {

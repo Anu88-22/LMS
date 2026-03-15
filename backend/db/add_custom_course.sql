@@ -1,4 +1,4 @@
-ALTER TABLE subjects ADD COLUMN price DECIMAL(10, 2) DEFAULT 0.00;
+-- Add custom course data
 
 INSERT INTO subjects (id, title, slug, description, is_published, price) VALUES 
 (4, 'The Ultimate User Masterclass', 'ultimate-user-masterclass', 'This is the premium custom course created using the YouTube videos you specifically requested.', 1, 99.99);

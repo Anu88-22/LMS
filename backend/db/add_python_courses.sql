@@ -4,8 +4,7 @@
 -- Course 2: Python Masterclass   (playlist: PLZPZq0r_RZOPP5Yjt6IqgytMRY5uLt4y3)
 -- =============================================================
 
--- Make sure price column exists (safely)
-ALTER TABLE subjects ADD COLUMN IF NOT EXISTS price DECIMAL(10, 2) DEFAULT 0.00;
+-- Make sure price column exists (redundant now)
 
 -- ---------------------------------------------------------------
 -- COURSE 5: Python Full Course for Beginners
