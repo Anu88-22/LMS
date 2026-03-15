@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../utils/jwt';
 
-export interface AuthRequest extends Request {
+export type AuthRequest = Request & {
     userId?: number;
-}
+};
 
 export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
