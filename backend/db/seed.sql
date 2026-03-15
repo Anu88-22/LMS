@@ -9,15 +9,20 @@ INSERT IGNORE INTO sections (id, subject_id, title, order_index) VALUES
 (1, 1, 'Java Basics', 1),
 (2, 1, 'Object Oriented Programming', 2),
 (4, 2, 'Python Installation & Basics', 1),
-(5, 2, 'Control Flow & Loops', 2);
+(5, 2, 'Control Flow & Loops', 2),
+(6, 3, 'Hooks & Re-renders', 1),
+(7, 3, 'Advanced Patterns', 2);
 
 INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES 
 (1, 'Introduction to Java', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 1, 600),
 (1, 'Variables and Data Types', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 2, 800),
 (2, 'Classes and Objects', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 1, 1200),
-(4, 'Python Installation', 'https://www.youtube.com/watch?v=t2_Q2BRzeEE', 1, 300),
-(4, 'First Python Script', 'https://www.youtube.com/watch?v=t2_Q2BRzeEE', 2, 450),
-(5, 'If Statements in Python', 'https://www.youtube.com/watch?v=t2_Q2BRzeEE', 1, 500);
+-- Python for Beginners (Subject 2)
+(4, 'Python Tutorial for Beginners', 'https://www.youtube.com/watch?v=eWRfhZUzrAc', 1, 0),
+-- Advanced React (Subject 3)
+(6, 'Intro to re-renders', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 1, 0),
+(6, 'Elements, Children and Re-renders', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 2, 0),
+(7, 'Components as props', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 1, 0);
 
 -- Make user enrolled in Java Masterclass
 INSERT INTO enrollments (user_id, subject_id) VALUES (1, 1);
