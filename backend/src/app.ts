@@ -16,6 +16,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+app.get('/', (req: express.Request, res: express.Response) => {
+    res.send('<h1>LMS Backend is Live!</h1><p>Use /api/setup-db to initialize the database.</p>');
+});
+
 // Main health check logic
 app.get('/api/health', (req: express.Request, res: express.Response) => {
     res.json({ status: 'ok', time: new Date().toISOString() });

@@ -8,8 +8,8 @@ const startServer = async () => {
         await pool.getConnection();
         console.log('Connected to Database successfully!');
 
-        app.listen(config.port, () => {
-            console.log(`LMS Backend running strictly ordered server on port ${config.port}`);
+        app.listen(config.port, '0.0.0.0', () => {
+            console.log(`LMS Backend running on 0.0.0.0:${config.port}`);
         });
     } catch (err) {
         console.error('Failed to start server. DB Connection error:', err);
