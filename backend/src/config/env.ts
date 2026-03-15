@@ -3,11 +3,11 @@ dotenv.config();
 
 export const config = {
     db: {
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '3306', 10),
-        user: process.env.DB_USER || 'root',
-        pass: process.env.DB_PASS || '',
-        name: process.env.DB_NAME || 'lms_db',
+        host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.MYSQLPORT || process.env.MYSQL_PORT || process.env.DB_PORT || '3306', 10),
+        user: process.env.MYSQLUSER || process.env.MYSQL_USER || process.env.DB_USER || 'root',
+        pass: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASS || '',
+        name: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'lms_db',
     },
     jwt: {
         accessSecret: process.env.JWT_ACCESS_SECRET || 'access_secret_key',
