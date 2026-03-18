@@ -117,27 +117,30 @@ app.get('/api/update-advanced-react', async (req: express.Request, res: express.
         }
         log += `Inserted 12 Advanced React lessons with timestamps\n`;
 
-        // Update Ultimate Masterclass lesson names
+        // Update Ultimate Masterclass lesson names & timestamps
         const [masterSecs]: any = await pool.query(
             `SELECT s.id FROM sections s JOIN subjects sub ON sub.id = s.subject_id WHERE sub.slug = 'ultimate-user-masterclass' LIMIT 1`
         );
         if (masterSecs.length > 0) {
             const msId = masterSecs[0].id;
-            const names = [
-                'Welcome to The Ultimate User Masterclass',
-                'Understanding User Psychology & Behavior',
-                'UX Research Methods & Techniques',
-                'Designing Intuitive User Interfaces',
-                'User Journey Mapping & Personas',
-                'Usability Testing & Feedback Loops',
-                'Accessibility & Inclusive Design',
-                'Analytics & Measuring User Success',
-                'Capstone: Building a User-Centric Product',
+            const lessons = [
+                ['Welcome to The Ultimate User Masterclass',   'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=0'],
+                ['Understanding User Psychology & Behavior',   'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=600'],
+                ['UX Research Methods & Techniques',           'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=1800'],
+                ['Designing Intuitive User Interfaces',        'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=3600'],
+                ['User Journey Mapping & Personas',            'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=5400'],
+                ['Usability Testing & Feedback Loops',         'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=7200'],
+                ['Accessibility & Inclusive Design',           'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=9000'],
+                ['Analytics & Measuring User Success',         'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=10800'],
+                ['Capstone: Building a User-Centric Product',  'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=12600'],
             ];
-            for (let i = 0; i < names.length; i++) {
-                await pool.query(`UPDATE videos SET title = ? WHERE section_id = ? AND order_index = ?`, [names[i], msId, i + 1]);
+            for (let i = 0; i < lessons.length; i++) {
+                await pool.query(
+                    `UPDATE videos SET title = ?, youtube_url = ? WHERE section_id = ? AND order_index = ?`, 
+                    [lessons[i][0], lessons[i][1], msId, i + 1]
+                );
             }
-            log += `Updated 9 Ultimate User Masterclass lesson names\n`;
+            log += `Updated 9 Ultimate User Masterclass lessons with titles and timestamps\n`;
         }
 
         res.set('Content-Type', 'text/plain').send(`✅ Update Complete!\n\n${log}`);

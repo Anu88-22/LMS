@@ -18,7 +18,11 @@ INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration
 (1, 'Variables and Data Types', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 2, 800),
 (2, 'Classes and Objects', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 1, 1200),
 -- Python for Beginners (Subject 2)
-(4, 'Python Tutorial for Beginners', 'https://www.youtube.com/watch?v=eWRfhZUzrAc', 1, 0),
+(4, 'Python Intro & Setup',    'https://www.youtube.com/watch?v=eWRfhZUzrAc&t=0',   1, 0),
+(4, 'Python Variables',        'https://www.youtube.com/watch?v=eWRfhZUzrAc&t=200', 2, 0),
+(4, 'Python Data Types',       'https://www.youtube.com/watch?v=eWRfhZUzrAc&t=500', 3, 0),
+(4, 'Python Functions',        'https://www.youtube.com/watch?v=eWRfhZUzrAc&t=900', 4, 0),
+(4, 'Python Loops & Logic',    'https://www.youtube.com/watch?v=eWRfhZUzrAc&t=1500', 5, 0),
 -- Advanced React (Subject 3) — Codevolution Advanced React Patterns
 (6, 'Intro to Advanced React Patterns',        'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=0',    1, 0),
 (6, 'Higher Order Components (HOC)',           'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=300',  2, 0),
