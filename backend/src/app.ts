@@ -95,18 +95,18 @@ app.get('/api/update-advanced-react', async (req: express.Request, res: express.
 
         // Insert 12 new lessons with timestamps
         const videos: [number, string, string, number][] = [
-            [sec1.id, 'Introduction & What is React?',           'https://www.youtube.com/watch?v=SqcY0GlETPk&t=0',    1],
-            [sec1.id, 'Setting Up the Development Environment',  'https://www.youtube.com/watch?v=SqcY0GlETPk&t=183',  2],
-            [sec1.id, 'React Components & JSX',                  'https://www.youtube.com/watch?v=SqcY0GlETPk&t=465',  3],
-            [sec1.id, 'Props & Component Communication',         'https://www.youtube.com/watch?v=SqcY0GlETPk&t=900',  4],
-            [sec1.id, 'useState Hook & State Management',        'https://www.youtube.com/watch?v=SqcY0GlETPk&t=1500', 5],
-            [sec1.id, 'useEffect Hook & Side Effects',           'https://www.youtube.com/watch?v=SqcY0GlETPk&t=2100', 6],
-            [sec2.id, 'useContext & Context API',                'https://www.youtube.com/watch?v=SqcY0GlETPk&t=2700', 1],
-            [sec2.id, 'useReducer for Complex State',            'https://www.youtube.com/watch?v=SqcY0GlETPk&t=3300', 2],
-            [sec2.id, 'Custom Hooks',                            'https://www.youtube.com/watch?v=SqcY0GlETPk&t=3900', 3],
-            [sec2.id, 'React Router & Navigation',               'https://www.youtube.com/watch?v=SqcY0GlETPk&t=4500', 4],
-            [sec2.id, 'Fetching Data with Axios',                'https://www.youtube.com/watch?v=SqcY0GlETPk&t=5100', 5],
-            [sec2.id, 'Performance Optimization & useMemo',      'https://www.youtube.com/watch?v=SqcY0GlETPk&t=5700', 6],
+            [sec1.id, 'Intro to Advanced React Patterns',        'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=0',    1],
+            [sec1.id, 'Higher Order Components (HOC)',           'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=300',  2],
+            [sec1.id, 'Render Props Pattern',                    'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=900',  3],
+            [sec1.id, 'Compound Components Pattern',             'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=1500', 4],
+            [sec1.id, 'Context API Pattern',                     'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=2100', 5],
+            [sec1.id, 'Performance Optimization with Memo',      'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=2700', 6],
+            [sec2.id, 'Custom Hooks Patterns',                   'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=3300', 1],
+            [sec2.id, 'State Reducer Pattern',                   'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=3900', 2],
+            [sec2.id, 'Control Props Pattern',                   'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=4500', 3],
+            [sec2.id, 'React Server Components',                 'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=5100', 4],
+            [sec2.id, 'Advanced Fetching & Suspense',            'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=5700', 5],
+            [sec2.id, 'Capstone: Building a Design System',      'https://www.youtube.com/watch?v=qTDnwmMF5q8&t=6300', 6],
         ];
 
         for (const [sId, title, url, oi] of videos) {
