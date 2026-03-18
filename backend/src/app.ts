@@ -124,15 +124,15 @@ app.get('/api/update-advanced-react', async (req: express.Request, res: express.
         if (masterSecs.length > 0) {
             const msId = masterSecs[0].id;
             const lessons = [
-                ['Welcome to The Ultimate User Masterclass',   'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=0'],
-                ['Understanding User Psychology & Behavior',   'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=600'],
-                ['UX Research Methods & Techniques',           'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=1800'],
-                ['Designing Intuitive User Interfaces',        'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=3600'],
-                ['User Journey Mapping & Personas',            'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=5400'],
-                ['Usability Testing & Feedback Loops',         'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=7200'],
-                ['Accessibility & Inclusive Design',           'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=9000'],
-                ['Analytics & Measuring User Success',         'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=10800'],
-                ['Capstone: Building a User-Centric Product',  'https://www.youtube.com/watch?v=zZ6vybT1HQs&t=12600'],
+                ['Introduction to Prompt Engineering',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=0'],
+                ['How Large Language Models Work',              'https://www.youtube.com/watch?v=VaSjiJMrq24&t=600'],
+                ['Zero-Shot vs Few-Shot Prompting',             'https://www.youtube.com/watch?v=VaSjiJMrq24&t=1800'],
+                ['Chain of Thought Prompting Techniques',       'https://www.youtube.com/watch?v=VaSjiJMrq24&t=3600'],
+                ['Advanced Prompt Patterns for Coding',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
+                ['Avoiding Hallucinations & Biases',            'https://www.youtube.com/watch?v=VaSjiJMrq24&t=7200'],
+                ['Prompt Engineering for Business',             'https://www.youtube.com/watch?v=VaSjiJMrq24&t=9000'],
+                ['Iterative Prompt Development',                'https://www.youtube.com/watch?v=VaSjiJMrq24&t=10800'],
+                ['Capstone: Designing an AI Agent Prompt',      'https://www.youtube.com/watch?v=VaSjiJMrq24&t=12600'],
             ];
             for (let i = 0; i < lessons.length; i++) {
                 await pool.query(
@@ -140,7 +140,7 @@ app.get('/api/update-advanced-react', async (req: express.Request, res: express.
                     [lessons[i][0], lessons[i][1], msId, i + 1]
                 );
             }
-            log += `Updated 9 Ultimate User Masterclass lessons with titles and timestamps\n`;
+            log += `Updated 9 Ultimate User Masterclass lessons with Prompt Engineering content\n`;
         }
 
         res.set('Content-Type', 'text/plain').send(`✅ Update Complete!\n\n${log}`);
