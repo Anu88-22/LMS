@@ -19,10 +19,19 @@ INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration
 (2, 'Classes and Objects', 'https://www.youtube.com/watch?v=WPvGqX-TXP0', 1, 1200),
 -- Python for Beginners (Subject 2)
 (4, 'Python Tutorial for Beginners', 'https://www.youtube.com/watch?v=eWRfhZUzrAc', 1, 0),
--- Advanced React (Subject 3)
-(6, 'Intro to re-renders', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 1, 0),
-(6, 'Elements, Children and Re-renders', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 2, 0),
-(7, 'Components as props', 'https://www.youtube.com/watch?v=qTDnwmMF5q8', 1, 0);
+-- Advanced React (Subject 3) — React Full Course by Mosh Hamedani with timestamps
+(6, 'Introduction & What is React?',           'https://www.youtube.com/watch?v=SqcY0GlETPk&t=0',    1, 0),
+(6, 'Setting Up the Development Environment',  'https://www.youtube.com/watch?v=SqcY0GlETPk&t=183',  2, 0),
+(6, 'React Components & JSX',                  'https://www.youtube.com/watch?v=SqcY0GlETPk&t=465',  3, 0),
+(6, 'Props & Component Communication',         'https://www.youtube.com/watch?v=SqcY0GlETPk&t=900',  4, 0),
+(6, 'useState Hook & State Management',        'https://www.youtube.com/watch?v=SqcY0GlETPk&t=1500', 5, 0),
+(6, 'useEffect Hook & Side Effects',           'https://www.youtube.com/watch?v=SqcY0GlETPk&t=2100', 6, 0),
+(7, 'useContext & Context API',                'https://www.youtube.com/watch?v=SqcY0GlETPk&t=2700', 1, 0),
+(7, 'useReducer for Complex State',            'https://www.youtube.com/watch?v=SqcY0GlETPk&t=3300', 2, 0),
+(7, 'Custom Hooks',                            'https://www.youtube.com/watch?v=SqcY0GlETPk&t=3900', 3, 0),
+(7, 'React Router & Navigation',               'https://www.youtube.com/watch?v=SqcY0GlETPk&t=4500', 4, 0),
+(7, 'Fetching Data with Axios',                'https://www.youtube.com/watch?v=SqcY0GlETPk&t=5100', 5, 0),
+(7, 'Performance Optimization & useMemo',      'https://www.youtube.com/watch?v=SqcY0GlETPk&t=5700', 6, 0);
 
 -- Make user enrolled in Java Masterclass
 INSERT INTO enrollments (user_id, subject_id) VALUES (1, 1);

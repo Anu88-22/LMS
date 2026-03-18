@@ -28,22 +28,26 @@ export default function CoursePlayer({ subjectTitle, sections }: { subjectTitle:
         }
     }, [sections, activeVideo]);
 
-    const getYouTubeId = (url: string) => {
+    const getYouTubeInfo = (url: string): { videoId: string | null; startSeconds: number } => {
         try {
             const urlObj = new URL(url);
+            let videoId: string | null = null;
             if (urlObj.hostname.includes('youtube.com')) {
-                return urlObj.searchParams.get('v');
+                videoId = urlObj.searchParams.get('v');
+            } else if (urlObj.hostname.includes('youtu.be')) {
+                videoId = urlObj.pathname.slice(1);
             }
-            if (urlObj.hostname.includes('youtu.be')) {
-                return urlObj.pathname.slice(1);
-            }
+            const t = urlObj.searchParams.get('t');
+            const startSeconds = t ? parseInt(t, 10) : 0;
+            return { videoId, startSeconds };
         } catch {
-            return null;
+            return { videoId: null, startSeconds: 0 };
         }
-        return null;
     };
 
-    const videoId = activeVideo ? getYouTubeId(activeVideo.youtube_url) : null;
+    const { videoId, startSeconds } = activeVideo
+        ? getYouTubeInfo(activeVideo.youtube_url)
+        : { videoId: null, startSeconds: 0 };
 
     return (
         <div className="flex flex-col md:flex-row min-h-[calc(100vh-4rem)] bg-gray-50">
@@ -97,6 +101,7 @@ export default function CoursePlayer({ subjectTitle, sections }: { subjectTitle:
                     <div className="w-full max-w-5xl p-0 md:p-6 lg:p-8 flex-1 flex flex-col">
                         <div className="bg-black w-full rounded-none md:rounded-xl overflow-hidden shadow-2xl relative" style={{ paddingTop: '56.25%' }}>
                             <YouTube
+                                key={`${videoId}-${startSeconds}`}
                                 videoId={videoId as string}
                                 className="absolute top-0 left-0 w-full h-full"
                                 opts={{
@@ -105,13 +110,15 @@ export default function CoursePlayer({ subjectTitle, sections }: { subjectTitle:
                                     playerVars: {
                                         autoplay: 1,
                                         modestbranding: 1,
-                                        rel: 0
+                                        rel: 0,
+                                        start: startSeconds
                                     }
                                 }}
                             />
                         </div>
                         <div className="mt-4 md:mt-6 p-4 md:p-0">
-                            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{activeVideo?.title}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">{activeVideo?.title}</h1>
+                            <p className="text-indigo-400 text-sm font-semibold mb-1">{subjectTitle}</p>
                             <p className="text-gray-400 text-sm">Select videos from the sidebar to continue learning.</p>
                         </div>
                     </div>
