@@ -145,9 +145,39 @@ export default function LearnClient({ subjectId, subject, sections }: Props) {
                     <p className="text-gray-500 mb-8">It looks like the live database hasn't been populated with videos for this course yet.</p>
                     <button 
                         onClick={handleFixDB}
-                        className="w-full px-6 py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 font-semibold transition shadow-lg"
+                        className="w-full px-6 py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 font-semibold transition shadow-lg mb-3"
                     >
                         🚀 Fix & Setup Database Now
+                    </button>
+                    <button 
+                        onClick={async () => {
+                            try {
+                                await apiClient.get('/rename-to-courses');
+                                alert('🎉 Lessons renamed to Course 1, Course 2, etc. successfully!');
+                                window.location.reload();
+                            } catch (err: any) {
+                                console.error('Rename Error:', err);
+                                alert('Failed to rename courses automtically. Visit your backend /api/rename-to-courses manually.');
+                            }
+                        }}
+                        className="w-full px-6 py-3 rounded-xl text-indigo-700 bg-white border border-indigo-200 hover:bg-indigo-50 font-semibold transition"
+                    >
+                        ✨ Rename to Course 1, 2, 3...
+                    </button>
+                    <button 
+                        onClick={async () => {
+                            try {
+                                await apiClient.get('/split-ultimate-course');
+                                alert('🎉 Course split into 9 individual subjects successfully! Redirecting to home...');
+                                window.location.href = '/';
+                            } catch (err: any) {
+                                console.error('Split Error:', err);
+                                alert('Failed to split course. Visit /api/split-ultimate-course manually.');
+                            }
+                        }}
+                        className="w-full px-6 py-3 rounded-xl text-amber-700 bg-amber-50 border border-amber-200 hover:bg-amber-100 font-semibold transition mt-3"
+                    >
+                        ✂️ Split into Individual Courses
                     </button>
                     <Link href="/" className="inline-block mt-4 text-sm text-gray-400 hover:text-gray-600">
                         ← Go back to dashboard

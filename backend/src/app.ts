@@ -150,6 +150,132 @@ app.get('/api/update-advanced-react', async (req: express.Request, res: express.
     }
 });
 
+// Route to apply the new "Unlimited Course" structure
+app.get('/api/rename-to-courses', async (req: express.Request, res: express.Response) => {
+    let log = "";
+    try {
+        // 1. Update the subject title and description
+        await pool.query(
+            `UPDATE subjects SET title = 'Unlimited Course Masterclass', slug = 'unlimited-course-masterclass', 
+             description = 'This is the premium custom course created with specific learning tracks.' WHERE id = 4`
+        );
+        log += "Updated Subject 4 title to 'Unlimited Course Masterclass'\n";
+
+        // 2. Update the section title
+        await pool.query(
+            `UPDATE sections SET title = 'Core Courses' WHERE subject_id = 4 AND order_index = 1`
+        );
+        log += "Updated Section title to 'Core Courses'\n";
+
+        // 3. Update the video titles (Course 1 to Course 9)
+        const courses = [
+            'Course 1: Complete HTML Course (Fundamentals)',
+            'Course 2: How to Learn AI (Step-by-Step Guide)',
+            'Course 3: Professional Python Programming',
+            'Course 4: Full-Stack Web Development',
+            'Course 5: Machine Learning and Deep Learning',
+            'Course 6: Cybersecurity and Ethical Hacking',
+            'Course 7: Digital Marketing and SEO',
+            'Course 8: Graphic Design & Creative UI/UX',
+            'Course 9: Cloud Computing with AWS & Azure'
+        ];
+
+        // Need to find the section ID for Subject 4
+        const [sections]: any = await pool.query(`SELECT id FROM sections WHERE subject_id = 4 LIMIT 1`);
+        if (sections.length > 0) {
+            const sectionId = sections[0].id;
+            for (let i = 0; i < courses.length; i++) {
+                await pool.query(
+                    `UPDATE videos SET title = ? WHERE section_id = ? AND order_index = ?`,
+                    [courses[i], sectionId, i + 1]
+                );
+            }
+            log += `Updated ${courses.length} video titles to 'Course X' format\n`;
+        } else {
+            log += "Warning: No section found for Subject 4, skipping video title updates\n";
+        }
+
+        res.set('Content-Type', 'text/plain').send(`✅ Unlimited Course Renaming Complete!\n\n${log}`);
+    } catch (err: any) {
+        console.error("Rename Error:", err);
+        res.status(500).json({ error: 'Rename failed', message: err.message });
+    }
+});
+
+// Route to split the Masterclass into separate top-level courses
+app.get('/api/split-ultimate-course', async (req: express.Request, res: express.Response) => {
+    let log = "";
+    try {
+        console.log("Starting Course Split...");
+        
+        // 1. Create the new subjects (IDs 5 to 13)
+        const subjects = [
+            [5, 'Complete HTML Course', 'html-course', 'Master the fundamentals of HTML5 and modern web structuring.', 0],
+            [6, 'How to Learn AI', 'learn-ai', 'A step-by-step roadmap to becoming an AI and Machine Learning expert.', 0],
+            [7, 'Professional Python Programming', 'python-pro', 'Go from basics to advanced professional Python coding.', 0],
+            [8, 'Full-Stack Web Development', 'web-dev-stack', 'Build full-stack applications using the MERN stack and beyond.', 0],
+            [9, 'Machine Learning Foundations', 'ml-foundations', 'Deep dive into neural networks, data science, and AI models.', 0],
+            [10, 'Cybersecurity Bootcamp', 'cyber-security', 'Learn ethical hacking, network security, and digital defense.', 0],
+            [11, 'Digital Marketing Strategy', 'digital-marketing', 'Master SEO, social media marketing, and data-driven advertising.', 0],
+            [12, 'Graphic Design & UI/UX', 'graphic-design', 'Design stunning user interfaces and professional creative assets.', 0],
+            [13, 'Cloud Computing Masterclass', 'cloud-computing', 'Deploy apps at scale using AWS, Azure, and Google Cloud.', 0]
+        ];
+
+        for (const [id, title, slug, desc, price] of subjects) {
+            await pool.query(
+                `INSERT IGNORE INTO subjects (id, title, slug, description, is_published, price) VALUES (?, ?, ?, ?, 1, ?)`,
+                [id, title, slug, desc, price]
+            );
+            log += `Added Subject: ${title}\n`;
+        }
+
+        // 2. Create sections for each new subject (ID 10 to 18)
+        const sections = [
+            [10, 5, 'Main Content'], [11, 6, 'Main Content'], [12, 7, 'Main Content'],
+            [13, 8, 'Main Content'], [14, 9, 'Main Content'], [15, 10, 'Main Content'],
+            [16, 11, 'Main Content'], [17, 12, 'Main Content'], [18, 13, 'Main Content']
+        ];
+
+        for (const [id, sId, title] of sections) {
+            await pool.query(
+                `INSERT IGNORE INTO sections (id, subject_id, title, order_index) VALUES (?, ?, ?, 1)`,
+                [id, sId, title]
+            );
+            log += `Added section for Subject ID ${sId}\n`;
+        }
+
+        // 3. Add the videos to their respective new sections
+        const videos = [
+            [10, 'Introduction to HTML5',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=0'],
+            [11, 'AI Engineer Roadmap',                    'https://www.youtube.com/watch?v=VaSjiJMrq24&t=600'],
+            [12, 'Advanced Python Features',               'https://www.youtube.com/watch?v=VaSjiJMrq24&t=1800'],
+            [13, 'Frontend and Backend Projects',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=3600'],
+            [14, 'Neural Networks & Data Science',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
+            [15, 'Cybersecurity & Ethical Hacking',        'https://www.youtube.com/watch?v=VaSjiJMrq24&t=7200'],
+            [16, 'Marketing & Search Engine Optimization', 'https://www.youtube.com/watch?v=VaSjiJMrq24&t=9000'],
+            [17, 'UI/UX Design Concepts',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=10800'],
+            [18, 'AWS and Azure Cloud Essentials',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=12600']
+        ];
+
+        for (const [secId, title, url] of videos) {
+            await pool.query(
+                `INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES (?, ?, ?, 1, 0)`,
+                [secId, title, url]
+            );
+            log += `Created video: ${title}\n`;
+        }
+
+        // 4. Optionally: Unpublish the "Ultimate Course Masterclass" placeholder (Subject 4)
+        await pool.query(`UPDATE subjects SET is_published = 0 WHERE id = 4`);
+        log += "Subject 4 (Ultimate Masterclass) has been unpublished from homepage.\n";
+
+        res.set('Content-Type', 'text/plain').send(`🎉 Course Split Complete!\n\n${log}`);
+    } catch (err: any) {
+        console.error("Split Error:", err);
+        res.status(500).json({ error: 'Split failed', message: err.message });
+    }
+});
+
 // Routes placeholders
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
