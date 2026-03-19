@@ -206,70 +206,73 @@ app.get('/api/rename-to-courses', async (req: express.Request, res: express.Resp
 app.get('/api/split-ultimate-course', async (req: express.Request, res: express.Response) => {
     let log = "";
     try {
-        console.log("Starting Course Split...");
+        console.log("Starting Course Split (v2)...");
         
-        // 1. Create the new subjects (IDs 5 to 13)
+        // 1. Cleanup: Delete any previously created subjects/sections from IDs 5-13 OR IDs 100+
+        // This ensures a clean slate
+        await pool.query(`DELETE FROM videos WHERE section_id BETWEEN 100 AND 120`);
+        await pool.query(`DELETE FROM sections WHERE id BETWEEN 100 AND 120`);
+        await pool.query(`DELETE FROM subjects WHERE id BETWEEN 100 AND 110`);
+        log += "Cleanup of old split attempts complete.\n";
+
+        // 2. Create the new subjects (IDs 101 to 109)
         const subjects = [
-            [5, 'Complete HTML Course', 'html-course', 'Master the fundamentals of HTML5 and modern web structuring.', 0],
-            [6, 'How to Learn AI', 'learn-ai', 'A step-by-step roadmap to becoming an AI and Machine Learning expert.', 0],
-            [7, 'Professional Python Programming', 'python-pro', 'Go from basics to advanced professional Python coding.', 0],
-            [8, 'Full-Stack Web Development', 'web-dev-stack', 'Build full-stack applications using the MERN stack and beyond.', 0],
-            [9, 'Machine Learning Foundations', 'ml-foundations', 'Deep dive into neural networks, data science, and AI models.', 0],
-            [10, 'Cybersecurity Bootcamp', 'cyber-security', 'Learn ethical hacking, network security, and digital defense.', 0],
-            [11, 'Digital Marketing Strategy', 'digital-marketing', 'Master SEO, social media marketing, and data-driven advertising.', 0],
-            [12, 'Graphic Design & UI/UX', 'graphic-design', 'Design stunning user interfaces and professional creative assets.', 0],
-            [13, 'Cloud Computing Masterclass', 'cloud-computing', 'Deploy apps at scale using AWS, Azure, and Google Cloud.', 0]
+            [101, 'Complete HTML Course', 'html-course-new', 'Master the fundamentals of HTML5 and modern web structuring.', 0],
+            [102, 'How to Learn AI', 'learn-ai-new', 'A step-by-step roadmap to becoming an AI and Machine Learning expert.', 0],
+            [103, 'Professional Python Programming', 'python-pro-new', 'Go from basics to advanced professional Python coding.', 0],
+            [104, 'Full-Stack Web Development', 'web-dev-stack-new', 'Build full-stack applications using the MERN stack and beyond.', 0],
+            [105, 'Machine Learning Foundations', 'ml-foundations-new', 'Deep dive into neural networks, data science, and AI models.', 0],
+            [106, 'Cybersecurity Bootcamp', 'cyber-security-new', 'Learn ethical hacking, network security, and digital defense.', 0],
+            [107, 'Digital Marketing Strategy', 'digital-marketing-new', 'Master SEO, social media marketing, and data-driven advertising.', 0],
+            [108, 'Graphic Design & UI/UX', 'graphic-design-new', 'Design stunning user interfaces and professional creative assets.', 0],
+            [109, 'Cloud Computing Masterclass', 'cloud-computing-new', 'Deploy apps at scale using AWS, Azure, and Google Cloud.', 0]
         ];
 
         for (const [id, title, slug, desc, price] of subjects) {
             await pool.query(
-                `INSERT IGNORE INTO subjects (id, title, slug, description, is_published, price) VALUES (?, ?, ?, ?, 1, ?)`,
+                `INSERT INTO subjects (id, title, slug, description, is_published, price) VALUES (?, ?, ?, ?, 1, ?)`,
                 [id, title, slug, desc, price]
             );
-            log += `Added Subject: ${title}\n`;
+            log += `Created Subject: ${title}\n`;
         }
 
-        // 2. Create sections for each new subject (ID 10 to 18)
-        const sections = [
-            [10, 5, 'Main Content'], [11, 6, 'Main Content'], [12, 7, 'Main Content'],
-            [13, 8, 'Main Content'], [14, 9, 'Main Content'], [15, 10, 'Main Content'],
-            [16, 11, 'Main Content'], [17, 12, 'Main Content'], [18, 13, 'Main Content']
-        ];
-
-        for (const [id, sId, title] of sections) {
+        // 3. Create sections for each new subject (ID 101 to 109)
+        for (let i = 0; i < subjects.length; i++) {
+            const subjectId = subjects[i][0];
+            const sectionId = 101 + i;
             await pool.query(
-                `INSERT IGNORE INTO sections (id, subject_id, title, order_index) VALUES (?, ?, ?, 1)`,
-                [id, sId, title]
+                `INSERT INTO sections (id, subject_id, title, order_index) VALUES (?, ?, 'Course Content', 1)`,
+                [sectionId, subjectId]
             );
-            log += `Added section for Subject ID ${sId}\n`;
+            log += `Created section for ${subjects[i][1]}\n`;
         }
 
-        // 3. Add the videos to their respective new sections
+        // 4. Add the videos to their respective new sections
         const videos = [
-            [10, 'Introduction to HTML5',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=0'],
-            [11, 'AI Engineer Roadmap',                    'https://www.youtube.com/watch?v=VaSjiJMrq24&t=600'],
-            [12, 'Advanced Python Features',               'https://www.youtube.com/watch?v=VaSjiJMrq24&t=1800'],
-            [13, 'Frontend and Backend Projects',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=3600'],
-            [14, 'Neural Networks & Data Science',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
-            [15, 'Cybersecurity & Ethical Hacking',        'https://www.youtube.com/watch?v=VaSjiJMrq24&t=7200'],
-            [16, 'Marketing & Search Engine Optimization', 'https://www.youtube.com/watch?v=VaSjiJMrq24&t=9000'],
-            [17, 'UI/UX Design Concepts',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=10800'],
-            [18, 'AWS and Azure Cloud Essentials',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=12600']
+            [101, 'Introduction to HTML5',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=0'],
+            [102, 'AI Engineer Roadmap',                    'https://www.youtube.com/watch?v=VaSjiJMrq24&t=600'],
+            [103, 'Advanced Python Features',               'https://www.youtube.com/watch?v=VaSjiJMrq24&t=1800'],
+            [104, 'Frontend and Backend Projects',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=3600'],
+            [105, 'Neural Networks & Data Science',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
+            [106, 'Cybersecurity & Ethical Hacking',        'https://www.youtube.com/watch?v=VaSjiJMrq24&t=7200'],
+            [107, 'Marketing & Search Engine Optimization', 'https://www.youtube.com/watch?v=VaSjiJMrq24&t=9000'],
+            [108, 'UI/UX Design Concepts',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=10800'],
+            [109, 'AWS and Azure Cloud Essentials',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=12600']
         ];
 
         for (const [secId, title, url] of videos) {
             await pool.query(
-                `INSERT IGNORE INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES (?, ?, ?, 1, 0)`,
+                `INSERT INTO videos (section_id, title, youtube_url, order_index, duration_seconds) VALUES (?, ?, ?, 1, 0)`,
                 [secId, title, url]
             );
-            log += `Created video: ${title}\n`;
+            log += `Linked video: ${title}\n`;
         }
 
-        // 4. Optionally: Unpublish the "Ultimate Course Masterclass" placeholder (Subject 4)
-        await pool.query(`UPDATE subjects SET is_published = 0 WHERE id = 4`);
-        log += "Subject 4 (Ultimate Masterclass) has been unpublished from homepage.\n";
+        // 5. Hide the old Subjects 4 through 13 if they were partial or old
+        await pool.query(`UPDATE subjects SET is_published = 0 WHERE id BETWEEN 4 AND 13`);
+        log += "Cleaned up old subject visibility.\n";
 
-        res.set('Content-Type', 'text/plain').send(`🎉 Course Split Complete!\n\n${log}`);
+        res.set('Content-Type', 'text/plain').send(`🎉 Course Split FIXED Successfully!\n\n${log}`);
     } catch (err: any) {
         console.error("Split Error:", err);
         res.status(500).json({ error: 'Split failed', message: err.message });
