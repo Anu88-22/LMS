@@ -290,12 +290,12 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
         const { message } = req.body;
         if (!message) return res.status(400).json({ error: 'Message is required' });
 
-        const HF_API_TOKEN = process.env.HF_API_TOKEN;
+        const HF_API_TOKEN = process.env.HF_API_TOKEN?.trim();
         
         // Use a model based on whether a token is available
         const model = HF_API_TOKEN 
             ? "mistralai/Mistral-7B-Instruct-v0.2" 
-            : "gpt2"; // GPT-2 is often accessible without a token for tests
+            : "gpt2"; 
         
         const response = await axios.post(
             `https://api-inference.huggingface.co/models/${model}`,
@@ -304,32 +304,42 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
                 headers: {
                     ...(HF_API_TOKEN ? { Authorization: `Bearer ${HF_API_TOKEN}` } : {}),
                     'Content-Type': 'application/json'
-                }
+                },
+                timeout: 10000 // 10 second timeout
             }
         );
 
-        // Extract text results
         let reply = "I'm sorry, I couldn't generate a response at this moment.";
         if (Array.isArray(response.data) && response.data[0]) {
             reply = response.data[0].generated_text || reply;
+        } else if (response.data && response.data.generated_text) {
+            reply = response.data.generated_text;
         }
 
-        // Friendly fallback message if no token is set
         if (!HF_API_TOKEN) {
-            reply = `[FREE MODE (ADD TOKEN FOR BETTER AI)]\n\n${reply}\n\n⚠️ TIP: To get professional answers, please add your 'HF_API_TOKEN' to your Render environment variables!`;
+            reply = `[FREE MODE]\n\n${reply}\n\n⚠️ TIP: Add your 'HF_API_TOKEN' to Render for better AI!`;
         }
 
         res.json({ reply });
     } catch (err: any) {
         console.error("Chat Error:", err.response?.data || err.message);
         
+        const errorMsg = err.response?.data?.error || err.message;
+
         if (!process.env.HF_API_TOKEN) {
             return res.status(200).json({ 
-                reply: "👋 Hi! To activate my full brain, please add your Hugging Face Token (HF_API_TOKEN) to your Render Dashboard settings! Use the link: https://huggingface.co/settings/tokens" 
+                reply: "👋 Hi! To activate me, please add your 'HF_API_TOKEN' to your Render Dashboard settings! link: https://huggingface.co/settings/tokens" 
             });
         }
         
-        res.status(500).json({ error: 'AI Assistant is currently busy. Please try again later.' });
+        // If it's a model loading error, tell the user to wait
+        if (errorMsg.includes("loading")) {
+             return res.status(200).json({ reply: "I'm just waking up! Please try again in 30 seconds while I load my brain. 🧠" });
+        }
+
+        res.status(200).json({ 
+            reply: `AI is currently busy (${errorMsg}). Please try again shortly or check your token!` 
+        });
     }
 });
 
