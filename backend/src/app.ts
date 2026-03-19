@@ -298,7 +298,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
             : "gpt2"; 
         
         const response = await axios.post(
-            `https://api-inference.huggingface.co/models/${model}`,
+            `https://router.huggingface.co/models/${model}`,
             { inputs: message },
             {
                 headers: {
