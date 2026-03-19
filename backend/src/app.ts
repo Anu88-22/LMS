@@ -249,15 +249,15 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
 
         // 4. Add the videos to their respective new sections
         const videos = [
-            [101, 'Introduction to HTML5',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=0'],
-            [102, 'AI Engineer Roadmap',                    'https://www.youtube.com/watch?v=VaSjiJMrq24&t=600'],
-            [103, 'Advanced Python Features',               'https://www.youtube.com/watch?v=VaSjiJMrq24&t=1800'],
-            [104, 'Frontend and Backend Projects',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=3600'],
-            [105, 'Neural Networks & Data Science',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
-            [106, 'Cybersecurity & Ethical Hacking',        'https://www.youtube.com/watch?v=VaSjiJMrq24&t=7200'],
-            [107, 'Marketing & Search Engine Optimization', 'https://www.youtube.com/watch?v=VaSjiJMrq24&t=9000'],
-            [108, 'UI/UX Design Concepts',                  'https://www.youtube.com/watch?v=VaSjiJMrq24&t=10800'],
-            [109, 'AWS and Azure Cloud Essentials',         'https://www.youtube.com/watch?v=VaSjiJMrq24&t=12600']
+            [101, 'Complete HTML Course (Beginner to Pro)', 'https://www.youtube.com/watch?v=G3e-cpL7ofc'],
+            [102, 'How to Learn AI in 2026',                  'https://www.youtube.com/watch?v=CT_WEGUKejQ'],
+            [103, 'Professional Python Programming',         'https://www.youtube.com/watch?v=K5KVEU3aaeQ'],
+            [104, 'Full-Stack Web Development Course',       'https://www.youtube.com/watch?v=nu_pCVPKzTk'],
+            [105, 'Neural Networks & Data Science',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'], // Keep old unless specified
+            [106, 'Cybersecurity Bootcamp (Full Guide)',     'https://www.youtube.com/watch?v=lpa8uy4DyMo'],
+            [107, 'Digital Marketing Strategy 2026',         'https://www.youtube.com/watch?v=jVgYgN0zcWs'],
+            [108, 'Graphic Design & UI/UX Masterclass',      'https://www.youtube.com/watch?v=O5IXf8qB9U4'],
+            [109, 'Cloud Computing Masterclass (Complete)',  'https://www.youtube.com/watch?v=NhDYbskXRgc']
         ];
 
         for (const [secId, title, url] of videos) {
