@@ -291,29 +291,44 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
         if (!message) return res.status(400).json({ error: 'Message is required' });
 
         const HF_API_TOKEN = process.env.HF_API_TOKEN;
-        // Use Mistral-7B for better quality, or GPT-2 for no-auth tests
-        const model = "mistralai/Mistral-7B-Instruct-v0.2";
+        
+        // Use a model based on whether a token is available
+        const model = HF_API_TOKEN 
+            ? "mistralai/Mistral-7B-Instruct-v0.2" 
+            : "gpt2"; // GPT-2 is often accessible without a token for tests
         
         const response = await axios.post(
             `https://api-inference.huggingface.co/models/${model}`,
-            { inputs: `<s>[INST] You are a helpful AI tutor for the LMS platform. Help the student with their learning. Question: ${message} [/INST]` },
+            { inputs: message },
             {
                 headers: {
-                    Authorization: HF_API_TOKEN ? `Bearer ${HF_API_TOKEN}` : '',
+                    ...(HF_API_TOKEN ? { Authorization: `Bearer ${HF_API_TOKEN}` } : {}),
                     'Content-Type': 'application/json'
                 }
             }
         );
 
-        // Hugging Face returns an array of results
-        const result = response.data[0]?.generated_text || "I'm sorry, I couldn't generate a response at this moment.";
-        
-        // Clean up Mistral wrapper if present
-        const cleanResult = result.split('[/INST]').pop()?.trim() || result;
+        // Extract text results
+        let reply = "I'm sorry, I couldn't generate a response at this moment.";
+        if (Array.isArray(response.data) && response.data[0]) {
+            reply = response.data[0].generated_text || reply;
+        }
 
-        res.json({ reply: cleanResult });
+        // Friendly fallback message if no token is set
+        if (!HF_API_TOKEN) {
+            reply = `[FREE MODE (ADD TOKEN FOR BETTER AI)]\n\n${reply}\n\n⚠️ TIP: To get professional answers, please add your 'HF_API_TOKEN' to your Render environment variables!`;
+        }
+
+        res.json({ reply });
     } catch (err: any) {
         console.error("Chat Error:", err.response?.data || err.message);
+        
+        if (!process.env.HF_API_TOKEN) {
+            return res.status(200).json({ 
+                reply: "👋 Hi! To activate my full brain, please add your Hugging Face Token (HF_API_TOKEN) to your Render Dashboard settings! Use the link: https://huggingface.co/settings/tokens" 
+            });
+        }
+        
         res.status(500).json({ error: 'AI Assistant is currently busy. Please try again later.' });
     }
 });
