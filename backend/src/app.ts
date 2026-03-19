@@ -212,10 +212,10 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
         // This ensures a clean slate
         await pool.query(`DELETE FROM videos WHERE section_id BETWEEN 100 AND 120`);
         await pool.query(`DELETE FROM sections WHERE id BETWEEN 100 AND 120`);
-        await pool.query(`DELETE FROM subjects WHERE id BETWEEN 100 AND 110`);
+        await pool.query(`DELETE FROM subjects WHERE id BETWEEN 100 AND 120`);
         log += "Cleanup of old split attempts complete.\n";
 
-        // 2. Create the new subjects (IDs 101 to 109)
+        // 2. Create the new subjects (IDs 101 to 111)
         const subjects = [
             [101, 'Complete HTML Course', 'html-course-new', 'Master the fundamentals of HTML5 and modern web structuring.', 0],
             [102, 'How to Learn AI', 'learn-ai-new', 'A step-by-step roadmap to becoming an AI and Machine Learning expert.', 0],
@@ -225,7 +225,9 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
             [106, 'Cybersecurity Bootcamp', 'cyber-security-new', 'Learn ethical hacking, network security, and digital defense.', 0],
             [107, 'Digital Marketing Strategy', 'digital-marketing-new', 'Master SEO, social media marketing, and data-driven advertising.', 0],
             [108, 'Graphic Design & UI/UX', 'graphic-design-new', 'Design stunning user interfaces and professional creative assets.', 0],
-            [109, 'Cloud Computing Masterclass', 'cloud-computing-new', 'Deploy apps at scale using AWS, Azure, and Google Cloud.', 0]
+            [109, 'Cloud Computing Masterclass', 'cloud-computing-new', 'Deploy apps at scale using AWS, Azure, and Google Cloud.', 0],
+            [110, 'Premium AI Masterclass (Buy Course)', 'premium-ai-pro', 'Exclusive paid course on advanced AI strategy and implementation.', 4999],
+            [111, 'Building AI with Hugging Face (Sample AI)', 'huggingface-ai-sample', 'Learn how to create and deploy AI models using Hugging Face Transformers.', 0]
         ];
 
         for (const [id, title, slug, desc, price] of subjects) {
@@ -236,7 +238,7 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
             log += `Created Subject: ${title}\n`;
         }
 
-        // 3. Create sections for each new subject (ID 101 to 109)
+        // 3. Create sections for each new subject (ID 101 to 111)
         for (let i = 0; i < subjects.length; i++) {
             const subjectId = subjects[i][0];
             const sectionId = 101 + i;
@@ -253,11 +255,13 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
             [102, 'How to Learn AI in 2026',                  'https://www.youtube.com/watch?v=CT_WEGUKejQ'],
             [103, 'Professional Python Programming',         'https://www.youtube.com/watch?v=K5KVEU3aaeQ'],
             [104, 'Full-Stack Web Development Course',       'https://www.youtube.com/watch?v=nu_pCVPKzTk'],
-            [105, 'Neural Networks & Data Science',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'], // Keep old unless specified
+            [105, 'Neural Networks & Data Science',          'https://www.youtube.com/watch?v=VaSjiJMrq24&t=5400'],
             [106, 'Cybersecurity Bootcamp (Full Guide)',     'https://www.youtube.com/watch?v=lpa8uy4DyMo'],
             [107, 'Digital Marketing Strategy 2026',         'https://www.youtube.com/watch?v=jVgYgN0zcWs'],
             [108, 'Graphic Design & UI/UX Masterclass',      'https://www.youtube.com/watch?v=O5IXf8qB9U4'],
-            [109, 'Cloud Computing Masterclass (Complete)',  'https://www.youtube.com/watch?v=NhDYbskXRgc']
+            [109, 'Cloud Computing Masterclass (Complete)',  'https://www.youtube.com/watch?v=NhDYbskXRgc'],
+            [110, 'Advanced AI for Business Professionals',  'https://www.youtube.com/watch?v=5NgNicANyqM'],
+            [111, 'Hugging Face AI Development Tutorial',    'https://www.youtube.com/watch?v=_u7Gf1IInYI']
         ];
 
         for (const [secId, title, url] of videos) {
