@@ -283,6 +283,41 @@ app.get('/api/split-ultimate-course', async (req: express.Request, res: express.
     }
 });
 
+// AI Chatbot Route (Hugging Face Proxy)
+import axios from 'axios';
+app.post('/api/chat', async (req: express.Request, res: express.Response) => {
+    try {
+        const { message } = req.body;
+        if (!message) return res.status(400).json({ error: 'Message is required' });
+
+        const HF_API_TOKEN = process.env.HF_API_TOKEN;
+        // Use Mistral-7B for better quality, or GPT-2 for no-auth tests
+        const model = "mistralai/Mistral-7B-Instruct-v0.2";
+        
+        const response = await axios.post(
+            `https://api-inference.huggingface.co/models/${model}`,
+            { inputs: `<s>[INST] You are a helpful AI tutor for the LMS platform. Help the student with their learning. Question: ${message} [/INST]` },
+            {
+                headers: {
+                    Authorization: HF_API_TOKEN ? `Bearer ${HF_API_TOKEN}` : '',
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        // Hugging Face returns an array of results
+        const result = response.data[0]?.generated_text || "I'm sorry, I couldn't generate a response at this moment.";
+        
+        // Clean up Mistral wrapper if present
+        const cleanResult = result.split('[/INST]').pop()?.trim() || result;
+
+        res.json({ reply: cleanResult });
+    } catch (err: any) {
+        console.error("Chat Error:", err.response?.data || err.message);
+        res.status(500).json({ error: 'AI Assistant is currently busy. Please try again later.' });
+    }
+});
+
 // Routes placeholders
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
