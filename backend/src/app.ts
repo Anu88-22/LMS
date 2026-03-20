@@ -294,7 +294,8 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
         
         // Use the Unified Router API (OpenAI-compatible)
         const endpoint = "https://router.huggingface.co/v1/chat/completions";
-        const model = "mistralai/Mistral-7B-Instruct-v0.2";
+        // Using a more widely supported model alias or version
+        const model = "mistralai/Mistral-7B-Instruct-v0.3"; 
         
         const response = await axios.post(
             endpoint,
@@ -311,7 +312,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
                     ...(HF_API_TOKEN ? { Authorization: `Bearer ${HF_API_TOKEN}` } : {}),
                     'Content-Type': 'application/json'
                 },
-                timeout: 15000 // 15 second timeout for AI
+                timeout: 20000 // 20 second timeout for AI
             }
         );
 
