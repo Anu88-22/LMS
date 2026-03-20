@@ -294,8 +294,8 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
         
         // Use the Unified Router API (OpenAI-compatible)
         const endpoint = "https://router.huggingface.co/v1/chat/completions";
-        // Using a more widely supported model alias or version
-        const model = "HuggingFaceH4/zephyr-7b-beta"; 
+        // Using a highly supported model on the router
+        const model = "meta-llama/Llama-3.1-8B-Instruct"; 
         
         const response = await axios.post(
             endpoint,
