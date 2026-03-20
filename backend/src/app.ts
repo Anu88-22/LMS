@@ -294,8 +294,8 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
         
         // Use the Unified Router API (OpenAI-compatible)
         const endpoint = "https://router.huggingface.co/v1/chat/completions";
-        // Using microsoft/Phi-3-mini-4k-instruct for highest compatibility
-        const model = "microsoft/Phi-3-mini-4k-instruct"; 
+        // Explicitly requesting the hf-inference provider to ensure availability
+        const model = "meta-llama/Llama-3.1-8B-Instruct"; 
         
         const response = await axios.post(
             endpoint,
@@ -310,9 +310,10 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
             {
                 headers: {
                     ...(HF_API_TOKEN ? { Authorization: `Bearer ${HF_API_TOKEN}` } : {}),
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-use-cache': 'false'
                 },
-                timeout: 20000 // 20 second timeout for AI
+                timeout: 25000 // 25 second timeout for AI
             }
         );
 
