@@ -292,28 +292,34 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
 
         const HF_API_TOKEN = process.env.HF_API_TOKEN?.trim();
         
-        // Use a model based on whether a token is available
-        const model = HF_API_TOKEN 
-            ? "mistralai/Mistral-7B-Instruct-v0.2" 
-            : "gpt2"; 
+        // Use the Unified Router API (OpenAI-compatible)
+        const endpoint = "https://router.huggingface.co/v1/chat/completions";
+        const model = "mistralai/Mistral-7B-Instruct-v0.2";
         
         const response = await axios.post(
-            `https://router.huggingface.co/models/${model}`,
-            { inputs: message },
+            endpoint,
+            { 
+                model: model,
+                messages: [
+                    { role: "system", content: "You are a helpful AI tutor for the LMS platform. Help students with their courses and topics." },
+                    { role: "user", content: message }
+                ],
+                max_tokens: 500
+            },
             {
                 headers: {
                     ...(HF_API_TOKEN ? { Authorization: `Bearer ${HF_API_TOKEN}` } : {}),
                     'Content-Type': 'application/json'
                 },
-                timeout: 10000 // 10 second timeout
+                timeout: 15000 // 15 second timeout for AI
             }
         );
 
         let reply = "I'm sorry, I couldn't generate a response at this moment.";
-        if (Array.isArray(response.data) && response.data[0]) {
-            reply = response.data[0].generated_text || reply;
-        } else if (response.data && response.data.generated_text) {
-            reply = response.data.generated_text;
+        
+        // Handle Chat Completion format
+        if (response.data?.choices?.[0]?.message?.content) {
+            reply = response.data.choices[0].message.content;
         }
 
         if (!HF_API_TOKEN) {
@@ -324,7 +330,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
     } catch (err: any) {
         console.error("Chat Error:", err.response?.data || err.message);
         
-        const errorMsg = err.response?.data?.error || err.message;
+        const errorMsg = err.response?.data?.error?.message || err.response?.data?.error || err.message;
 
         if (!process.env.HF_API_TOKEN) {
             return res.status(200).json({ 
@@ -332,9 +338,8 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
             });
         }
         
-        // If it's a model loading error, tell the user to wait
-        if (errorMsg.includes("loading")) {
-             return res.status(200).json({ reply: "I'm just waking up! Please try again in 30 seconds while I load my brain. 🧠" });
+        if (errorMsg.includes("loading") || errorMsg.includes("overloaded")) {
+             return res.status(200).json({ reply: "I'm just waking up or a bit busy! Please try again in 30 seconds. 🧠" });
         }
 
         res.status(200).json({ 
